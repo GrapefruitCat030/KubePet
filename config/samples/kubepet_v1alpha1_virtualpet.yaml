@@ -1,0 +1,9 @@
+apiVersion: kubepet.grapefruitcat030.github.io/v1alpha1
+kind: VirtualPet
+metadata:
+  labels:
+    app.kubernetes.io/name: kubepet
+    app.kubernetes.io/managed-by: kustomize
+  name: virtualpet-sample
+spec:
+  # TODO(user): Add fields here

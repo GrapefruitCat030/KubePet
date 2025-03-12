@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- kubepet_v1alpha1_virtualpet.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
