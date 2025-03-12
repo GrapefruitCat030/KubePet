@@ -18,7 +18,9 @@ package controller
 
 import (
 	"context"
+	"time"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -50,8 +52,27 @@ func (r *VirtualPetReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
+	virtualPet := &kubepetv1alpha1.VirtualPet{}
+	if err := r.Get(ctx, req.NamespacedName, virtualPet); err != nil {
+		log.Log.Error(err, "Failed to get VirtualPet")
+		return ctrl.Result{}, err
+	}
+	log.Log.Info("Reconciling VirtualPet", "Name", virtualPet.Name)
 
-	return ctrl.Result{}, nil
+	// Update the status of the VirtualPet
+	virtualPet.Status.Hunger = 50
+	virtualPet.Status.Mood = 50
+	virtualPet.Status.Stage = "baby"
+	virtualPet.Status.LastInteraction = metav1.Now()
+	virtualPet.Status.StatusMessage = "VirtualPet is healthy"
+
+	if err := r.Status().Update(ctx, virtualPet); err != nil {
+		log.Log.Error(err, "unable to update VirtualPet status")
+		return ctrl.Result{}, err
+	}
+
+	// Requeue the request after a certain duration to simulate the VirtualPet's status change
+	return ctrl.Result{RequeueAfter: time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

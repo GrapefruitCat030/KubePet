@@ -23,23 +23,54 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+// Apperance defines the visual characteristics of the pet.
+type Apperance struct {
+	// Color of the pet, e.g. black, white, etc.
+	Color string `json:"color,omitempty"`
+	// Variant of the pet, e.g. siamese, persian, etc.
+	Variant string `json:"variant,omitempty"`
+}
+
 // VirtualPetSpec defines the desired state of VirtualPet.
 type VirtualPetSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of VirtualPet. Edit virtualpet_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Type of pet, e.g. cat, dog, etc.
+	// +kubebuilder:validation:Enum=cat;dog;bird;dragon
+	PetType string `json:"petType"`
+	// Name of the pet
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=20
+	PetName string `json:"petName"`
+	// Appearance details of the pet
+	Appearance *Apperance `json:"appearance,omitempty"`
 }
 
 // VirtualPetStatus defines the observed state of VirtualPet.
 type VirtualPetStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// Hunger level of the pet (0-100)
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	Hunger int32 `json:"hunger,omitempty"`
+	// Mood level of the pet (0-100)
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	Mood int32 `json:"mood,omitempty"`
+	// Current life stage of the pet, e.g. baby, adult, etc.
+	// +kubebuilder:validation:Enum=baby;young;adult;senior
+	Stage string `json:"stage,omitempty"`
+	// Timestamp of the last interaction with the pet
+	LastInteraction metav1.Time `json:"lastInteraction,omitempty"`
+	// Status message of the pet
+	StatusMessage string `json:"statusMessage,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="PetType",type="string",JSONPath=".spec.petType"
+// +kubebuilder:printcolumn:name="PetName",type="string",JSONPath=".spec.petName"
+// +kubebuilder:printcolumn:name="Hunger",type="integer",JSONPath=".status.hunger"
+// +kubebuilder:printcolumn:name="Mood",type="integer",JSONPath=".status.mood"
+// +kubebuilder:printcolumn:name="Stage",type="string",JSONPath=".status.stage"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // VirtualPet is the Schema for the virtualpets API.
 type VirtualPet struct {

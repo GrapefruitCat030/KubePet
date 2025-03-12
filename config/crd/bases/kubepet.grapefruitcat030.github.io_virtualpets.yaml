@@ -1,0 +1,123 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.2
+  name: virtualpets.kubepet.grapefruitcat030.github.io
+spec:
+  group: kubepet.grapefruitcat030.github.io
+  names:
+    kind: VirtualPet
+    listKind: VirtualPetList
+    plural: virtualpets
+    singular: virtualpet
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.petType
+      name: PetType
+      type: string
+    - jsonPath: .spec.petName
+      name: PetName
+      type: string
+    - jsonPath: .status.hunger
+      name: Hunger
+      type: integer
+    - jsonPath: .status.mood
+      name: Mood
+      type: integer
+    - jsonPath: .status.stage
+      name: Stage
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: VirtualPet is the Schema for the virtualpets API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: VirtualPetSpec defines the desired state of VirtualPet.
+            properties:
+              appearance:
+                description: Appearance details of the pet
+                properties:
+                  color:
+                    description: Color of the pet, e.g. black, white, etc.
+                    type: string
+                  variant:
+                    description: Variant of the pet, e.g. siamese, persian, etc.
+                    type: string
+                type: object
+              petName:
+                description: Name of the pet
+                maxLength: 20
+                minLength: 1
+                type: string
+              petType:
+                description: Type of pet, e.g. cat, dog, etc.
+                enum:
+                - cat
+                - dog
+                - bird
+                - dragon
+                type: string
+            required:
+            - petName
+            - petType
+            type: object
+          status:
+            description: VirtualPetStatus defines the observed state of VirtualPet.
+            properties:
+              hunger:
+                description: Hunger level of the pet (0-100)
+                format: int32
+                maximum: 100
+                minimum: 0
+                type: integer
+              lastInteraction:
+                description: Timestamp of the last interaction with the pet
+                format: date-time
+                type: string
+              mood:
+                description: Mood level of the pet (0-100)
+                format: int32
+                maximum: 100
+                minimum: 0
+                type: integer
+              stage:
+                description: Current life stage of the pet, e.g. baby, adult, etc.
+                enum:
+                - baby
+                - young
+                - adult
+                - senior
+                type: string
+              statusMessage:
+                description: Status message of the pet
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

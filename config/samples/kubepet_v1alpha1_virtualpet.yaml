@@ -4,6 +4,16 @@ metadata:
   labels:
     app.kubernetes.io/name: kubepet
     app.kubernetes.io/managed-by: kustomize
-  name: virtualpet-sample
+  name: gfc-sample
 spec:
-  # TODO(user): Add fields here
+  petType: cat
+  petName: Whiskers
+  appearance:
+    color: black
+    variant: siamese
+status:
+  hunger: 50
+  mood: 75
+  stage: young
+  lastInteraction: "2025-03-12T12:34:56Z"
+  statusMessage: "Happy and playful"
